@@ -1,0 +1,470 @@
+#pragma autorecover
+#pragma namespace("\\\\.\\root\\Microsoft\\Windows\\Defender")
+
+Instance of __Win32Provider as $prov
+{
+  Name = "ProtectionManagement";
+  ClsId = "{A7C452EF-8E9F-42EB-9F2B-245613CA0DC9}";
+  ImpersonationLevel = 1;
+  HostingModel = "LocalServiceHost";
+  version = 1073741825;
+};
+
+Instance of __MethodProviderRegistration
+{
+  Provider = $prov;
+};
+
+Instance of __EventProviderRegistration
+{
+  Provider = $prov;
+  eventQueryList = {"select * from MSFT_MpEvent"};
+};
+
+Instance of __InstanceProviderRegistration
+{
+  Provider = $prov;
+  supportsGet = TRUE;
+  supportsPut = TRUE;
+  supportsDelete = TRUE;
+  supportsEnumeration = TRUE;
+  QuerySupportLevels;
+};
+
+[locale(1033)] 
+class BaseStatus
+{
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpComputerStatus : BaseStatus
+{
+  [read : ToSubclass,key] string ComputerID = "";
+  [BitMap{"0", "1", "2", "4", "8", "16"} : ToSubclass,read : ToSubclass] uint32 ComputerState = 0;
+  [read : ToSubclass] string AMProductVersion = "";
+  [read : ToSubclass] string AMServiceVersion = "";
+  string AntispywareSignatureVersion = "";
+  [read : ToSubclass] uint32 AntispywareSignatureAge = 0;
+  [read : ToSubclass] datetime AntispywareSignatureLastUpdated;
+  [read : ToSubclass] string AntivirusSignatureVersion = "";
+  [read : ToSubclass] uint32 AntivirusSignatureAge = 0;
+  [read : ToSubclass] datetime AntivirusSignatureLastUpdated;
+  string NISSignatureVersion = "";
+  [read : ToSubclass] uint32 NISSignatureAge = 0;
+  [read : ToSubclass] datetime NISSignatureLastUpdated;
+  [read : ToSubclass] datetime FullScanStartTime;
+  [read : ToSubclass] datetime FullScanEndTime;
+  [read : ToSubclass] uint32 FullScanAge = 0;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 LastFullScanSource = 0;
+  [ValueMap{"0", "1", "2"} : ToSubclass,read : ToSubclass] uint8 RealTimeScanDirection = 0;
+  [read : ToSubclass] datetime QuickScanStartTime;
+  [read : ToSubclass] datetime QuickScanEndTime;
+  [read : ToSubclass] uint32 QuickScanAge = 0;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 LastQuickScanSource = 0;
+  [read : ToSubclass] string AMEngineVersion = "";
+  [read : ToSubclass] boolean AMServiceEnabled = FALSE;
+  [read : ToSubclass] boolean OnAccessProtectionEnabled = FALSE;
+  [read : ToSubclass] boolean IoavProtectionEnabled = FALSE;
+  [read : ToSubclass] boolean BehaviorMonitorEnabled = FALSE;
+  [read : ToSubclass] boolean AntivirusEnabled = FALSE;
+  [read : ToSubclass] boolean AntispywareEnabled = FALSE;
+  [read : ToSubclass] boolean IsVirtualMachine = FALSE;
+  [read : ToSubclass] boolean IsTamperProtected = FALSE;
+  [read : ToSubclass] boolean RealTimeProtectionEnabled = FALSE;
+  [read : ToSubclass] string NISEngineVersion = "";
+  [read : ToSubclass] boolean NISEnabled = FALSE;
+};
+
+[Indication : ToSubclass DisableOverride,dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpEvent
+{
+  [ValueMap{"1", "2", "4", "8"} : ToSubclass,read : ToSubclass,key] uint32 CategoryDiscriminant;
+  [BitMap{"1", "2"} : ToSubclass,read : ToSubclass] uint32 ScanNotificationsValue;
+  [BitMap{"1", "2", "4", "8", "16"} : ToSubclass,read : ToSubclass] uint32 ThreatNotificationsValue;
+  [BitMap{"1"} : ToSubclass,read : ToSubclass] uint32 SignatureNotificationsValue;
+  [BitMap{"1", "2", "4", "8", "16", "32", "64"} : ToSubclass,read : ToSubclass] uint32 ComputerNotificationsValue;
+  [read : ToSubclass] datetime NotificationTime;
+  [read : ToSubclass] uint32 AdditionalData;
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpHeartBeat
+{
+  [implemented,static : ToSubclass DisableOverride] uint32 Send();
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpPreference
+{
+  [read : ToSubclass,key] string ComputerID = "";
+  boolean DisableAutoExclusions = FALSE;
+  string ExclusionPath[];
+  string ExclusionExtension[];
+  string ExclusionProcess[];
+  uint32 QuarantinePurgeItemsAfterDelay;
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 RealTimeScanDirection = 0;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 RemediationScheduleDay;
+  datetime RemediationScheduleTime;
+  uint32 ReportingAdditionalActionTimeOut;
+  uint32 ReportingCriticalFailureTimeOut;
+  uint32 ReportingNonCriticalTimeOut;
+  uint8 ScanAvgCPULoadFactor;
+  boolean CheckForSignaturesBeforeRunningScan;
+  uint32 ScanPurgeItemsAfterDelay;
+  boolean ScanOnlyIfIdleEnabled;
+  [ValueMap{"1", "2"} : ToSubclass] uint8 ScanParameters;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 ScanScheduleDay;
+  datetime ScanScheduleQuickScanTime;
+  datetime ScanScheduleTime;
+  uint32 SignatureFirstAuGracePeriod;
+  uint32 SignatureAuGracePeriod;
+  string SignatureDefinitionUpdateFileSharesSources;
+  boolean SignatureDisableUpdateOnStartupWithoutEngine;
+  string SignatureFallbackOrder;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 SignatureScheduleDay;
+  datetime SignatureScheduleTime;
+  uint32 SignatureUpdateCatchupInterval;
+  uint32 SignatureUpdateInterval;
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 MAPSReporting;
+  [ValueMap{"0", "1", "2", "3"} : ToSubclass] uint8 SubmitSamplesConsent;
+  boolean DisablePrivacyMode;
+  boolean RandomizeScheduleTaskTimes;
+  boolean DisableBehaviorMonitoring;
+  boolean DisableIntrusionPreventionSystem;
+  boolean DisableIOAVProtection;
+  boolean DisableRealtimeMonitoring;
+  boolean DisableScriptScanning;
+  boolean DisableArchiveScanning;
+  boolean DisableCatchupFullScan;
+  boolean DisableCatchupQuickScan;
+  boolean DisableEmailScanning;
+  boolean DisableRemovableDriveScanning;
+  boolean DisableRestorePoint;
+  boolean DisableScanningMappedNetworkDrivesForFullScan;
+  boolean DisableScanningNetworkFiles;
+  boolean UILockdown;
+  sint64 ThreatIDDefaultAction_Ids[];
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ThreatIDDefaultAction_Actions[];
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 UnknownThreatDefaultAction;
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 LowThreatDefaultAction;
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ModerateThreatDefaultAction;
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 HighThreatDefaultAction;
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 SevereThreatDefaultAction;
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 PUAProtection;
+  boolean DisableBlockAtFirstSeen;
+  [ValueMap{"0", "1", "2", "4", "6"} : ToSubclass] uint8 CloudBlockLevel;
+  uint32 CloudExtendedTimeout;
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 EnableNetworkProtection;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass] uint8 EnableControlledFolderAccess;
+  string AttackSurfaceReductionOnlyExclusions[];
+  string AttackSurfaceReductionRules_Ids[];
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 AttackSurfaceReductionRules_Actions[];
+  string ControlledFolderAccessAllowedApplications[];
+  string ControlledFolderAccessProtectedFolders[];
+  string SharedSignaturesPath;
+  boolean EnableLowCpuPriority;
+  boolean EnableFileHashComputation;
+  [implemented,static : ToSubclass DisableOverride] uint32 Set([In] boolean DisableAutoExclusions,[In] string ExclusionPath[],[In] string ExclusionExtension[],[In] string ExclusionProcess[],[In] uint32 QuarantinePurgeItemsAfterDelay,[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 RealTimeScanDirection,[In,ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 RemediationScheduleDay,[In] datetime RemediationScheduleTime,[In] uint32 ReportingAdditionalActionTimeOut,[In] uint32 ReportingCriticalFailureTimeOut,[In] uint32 ReportingNonCriticalTimeOut,[In] uint8 ScanAvgCPULoadFactor,[In] boolean CheckForSignaturesBeforeRunningScan,[In] uint32 ScanPurgeItemsAfterDelay,[In] boolean ScanOnlyIfIdleEnabled,[In,ValueMap{"1", "2"} : ToSubclass] uint8 ScanParameters,[In,ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 ScanScheduleDay,[In] datetime ScanScheduleQuickScanTime,[In] datetime ScanScheduleTime,[In] uint32 SignatureFirstAuGracePeriod,[In] uint32 SignatureAuGracePeriod,[In] string SignatureDefinitionUpdateFileSharesSources,[In] boolean SignatureDisableUpdateOnStartupWithoutEngine,[In] string SignatureFallbackOrder,[In,ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 SignatureScheduleDay,[In] datetime SignatureScheduleTime,[In] uint32 SignatureUpdateCatchupInterval,[In] uint32 SignatureUpdateInterval,[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 MAPSReporting,[In,ValueMap{"0", "1", "2", "3"} : ToSubclass] uint8 SubmitSamplesConsent,[in] boolean DisablePrivacyMode,[In] boolean RandomizeScheduleTaskTimes,[In] boolean DisableBehaviorMonitoring,[In] boolean DisableIntrusionPreventionSystem,[In] boolean DisableIOAVProtection,[In] boolean DisableRealtimeMonitoring,[In] boolean DisableScriptScanning,[In] boolean DisableArchiveScanning,[In] boolean DisableCatchupFullScan,[In] boolean DisableCatchupQuickScan,[In] boolean DisableEmailScanning,[In] boolean DisableRemovableDriveScanning,[In] boolean DisableRestorePoint,[In] boolean DisableScanningMappedNetworkDrivesForFullScan,[In] boolean DisableScanningNetworkFiles,[In] boolean UILockdown,[In] sint64 ThreatIDDefaultAction_Ids[],[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ThreatIDDefaultAction_Actions[],[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 UnknownThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 LowThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ModerateThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 HighThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 SevereThreatDefaultAction,[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 PUAProtection,[In] boolean DisableBlockAtFirstSeen,[In,ValueMap{"0", "1", "2", "4", "6"} : ToSubclass] uint8 CloudBlockLevel,[In] uint32 CloudExtendedTimeout,[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 EnableNetworkProtection,[In,ValueMap{"0", "1", "2", "3", "4"} : ToSubclass] uint8 EnableControlledFolderAccess,[In] string AttackSurfaceReductionOnlyExclusions[],[In] string AttackSurfaceReductionRules_Ids[],[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 AttackSurfaceReductionRules_Actions[],[In] string ControlledFolderAccessAllowedApplications[],[In] string ControlledFolderAccessProtectedFolders[],[in] string SharedSignaturesPath,[In] boolean EnableLowCpuPriority,[In] boolean EnableFileHashComputation,[In] boolean Force);
+  [implemented,static : ToSubclass DisableOverride] uint32 Remove([In] string ExclusionPath[],[In] string ExclusionExtension[],[In] string ExclusionProcess[],[In] sint64 ThreatIDDefaultAction_Ids[],[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean UnknownThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean LowThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean ModerateThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean HighThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean SevereThreatDefaultAction,[In] string AttackSurfaceReductionOnlyExclusions[],[In] string AttackSurfaceReductionRules_Ids[],[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 AttackSurfaceReductionRules_Actions[],[In] string ControlledFolderAccessAllowedApplications[],[In] string ControlledFolderAccessProtectedFolders[],[in] string SharedSignaturesPath,[In] boolean Force);
+  [implemented,static : ToSubclass DisableOverride] uint32 Add([In] string ExclusionPath[],[In] string ExclusionExtension[],[In] string ExclusionProcess[],[In] sint64 ThreatIDDefaultAction_Ids[],[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ThreatIDDefaultAction_Actions[],[In] string AttackSurfaceReductionOnlyExclusions[],[In] string AttackSurfaceReductionRules_Ids[],[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 AttackSurfaceReductionRules_Actions[],[In] string ControlledFolderAccessAllowedApplications[],[In] string ControlledFolderAccessProtectedFolders[],[in] string SharedSignaturesPath,[In] boolean Force);
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpScan
+{
+  [implemented,static : ToSubclass DisableOverride] uint32 Start([In] uint8 ScanType,[In] string ScanPath);
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpSignature
+{
+  [implemented,static : ToSubclass DisableOverride] uint32 Update([In] uint8 UpdateSource);
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpThreat : BaseStatus
+{
+  [read : ToSubclass] string SchemaVersion = "1.0.0.0";
+  [key,read : ToSubclass] sint64 ThreatID;
+  [read : ToSubclass] string ThreatName;
+  [ValueMap{"0", "1", "2", "3", "4", "5"} : ToSubclass,read : ToSubclass] uint8 SeverityID;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7,8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "36", "37", "38", "39", "40", "42", "43", "44", "45", "46", "47", "48"} : ToSubclass,read : ToSubclass] uint8 CategoryID;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 TypeID;
+  [BitMap{"0", "1", "2", "4", "8", "16", "32"} : ToSubclass,read : ToSubclass] uint32 RollupStatus;
+  [read : ToSubclass] string Resources[];
+  [read : ToSubclass] boolean DidThreatExecute = FALSE;
+  [read : ToSubclass] boolean IsActive = FALSE;
+  [implemented,static : ToSubclass DisableOverride] uint32 Remove();
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpThreatCatalog : BaseStatus
+{
+  [key,read : ToSubclass] sint64 ThreatID;
+  [read : ToSubclass] string ThreatName;
+  [ValueMap{"0", "1", "2", "3", "4", "5"} : ToSubclass,read : ToSubclass] uint8 SeverityID;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7,8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "36", "37", "38", "39", "40", "42", "43", "44", "45", "46", "47", "48"} : ToSubclass,read : ToSubclass] uint8 CategoryID;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 TypeID;
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpThreatDetection : BaseStatus
+{
+  [key,read : ToSubclass] string DetectionID;
+  [key,read : ToSubclass] sint64 ThreatID;
+  [read : ToSubclass] string ProcessName;
+  [read : ToSubclass] string DomainUser;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "7", "8", "9"} : ToSubclass,read : ToSubclass] uint8 DetectionSourceTypeID;
+  [read : ToSubclass] string Resources[];
+  [read : ToSubclass] datetime InitialDetectionTime;
+  [read : ToSubclass] datetime LastThreatStatusChangeTime;
+  [read : ToSubclass] datetime RemediationTime;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 CurrentThreatExecutionStatusID;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "Blocked", "102", "103", "104", "105", "107"} : ToSubclass,read : ToSubclass] uint8 ThreatStatusID;
+  [read : ToSubclass] sint32 ThreatStatusErrorCode;
+  [BitMap{"0", "1", "2", "3", "6", "8", "9", "10"} : ToSubclass,read : ToSubclass] uint8 CleaningActionID;
+  [read : ToSubclass] string AMProductVersion = "";
+  [read : ToSubclass] boolean ActionSuccess = FALSE;
+  [ValueMap{"0", "4", "8", "12", "16", "20", "24", "28", "32768", "32772", "32776", "32780", "32784", "32788", "32792", "32796"} : ToSubclass,read : ToSubclass] uint32 AdditionalActionsBitMask;
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpWDOScan
+{
+  [implemented,static : ToSubclass DisableOverride] uint32 Start();
+};
+
+// This duplication of provider registration is required to support 'protectionManagement' class on defender
+#pragma namespace( "\\\\.\\root\\microsoft\\protectionManagement")
+Instance of __Win32Provider as $prov1 
+{ 
+ Name = "ProtectionManagement";
+ ClsId = "{A7C452EF-8E9F-42EB-9F2B-245613CA0DC9}";
+ ImpersonationLevel = 1;
+ HostingModel = "LocalServiceHost";
+ version = 1073741825;
+}; 
+
+Instance of __MethodProviderRegistration 
+{ 
+ Provider = $prov1;
+}; 
+
+Instance of __EventProviderRegistration 
+{ 
+ Provider = $prov1;
+ eventQueryList = {"select * from MSFT_MpEvent"};
+}; 
+
+Instance of __InstanceProviderRegistration 
+{ 
+ Provider = $prov1;
+ supportsGet = TRUE;
+ supportsPut = TRUE;
+ supportsDelete = TRUE;
+ supportsEnumeration = TRUE;
+ QuerySupportLevels;
+};
+
+[locale(1033)] 
+class BaseStatus
+{
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpComputerStatus : BaseStatus
+{
+  [read : ToSubclass,key] string ComputerID = "";
+  [BitMap{"0", "1", "2", "4", "8", "16"} : ToSubclass,read : ToSubclass] uint32 ComputerState = 0;
+  [read : ToSubclass] string AMProductVersion = "";
+  [read : ToSubclass] string AMServiceVersion = "";
+  string AntispywareSignatureVersion = "";
+  [read : ToSubclass] uint32 AntispywareSignatureAge = 0;
+  [read : ToSubclass] datetime AntispywareSignatureLastUpdated;
+  [read : ToSubclass] string AntivirusSignatureVersion = "";
+  [read : ToSubclass] uint32 AntivirusSignatureAge = 0;
+  [read : ToSubclass] datetime AntivirusSignatureLastUpdated;
+  string NISSignatureVersion = "";
+  [read : ToSubclass] uint32 NISSignatureAge = 0;
+  [read : ToSubclass] datetime NISSignatureLastUpdated;
+  [read : ToSubclass] datetime FullScanStartTime;
+  [read : ToSubclass] datetime FullScanEndTime;
+  [read : ToSubclass] uint32 FullScanAge = 0;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 LastFullScanSource = 0;
+  [ValueMap{"0", "1", "2"} : ToSubclass,read : ToSubclass] uint8 RealTimeScanDirection = 0;
+  [read : ToSubclass] datetime QuickScanStartTime;
+  [read : ToSubclass] datetime QuickScanEndTime;
+  [read : ToSubclass] uint32 QuickScanAge = 0;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 LastQuickScanSource = 0;
+  [read : ToSubclass] string AMEngineVersion = "";
+  [read : ToSubclass] boolean AMServiceEnabled = FALSE;
+  [read : ToSubclass] boolean OnAccessProtectionEnabled = FALSE;
+  [read : ToSubclass] boolean IoavProtectionEnabled = FALSE;
+  [read : ToSubclass] boolean BehaviorMonitorEnabled = FALSE;
+  [read : ToSubclass] boolean AntivirusEnabled = FALSE;
+  [read : ToSubclass] boolean AntispywareEnabled = FALSE;
+  [read : ToSubclass] boolean IsVirtualMachine = FALSE;
+  [read : ToSubclass] boolean IsTamperProtected = FALSE;
+  [read : ToSubclass] boolean RealTimeProtectionEnabled = FALSE;
+  [read : ToSubclass] string NISEngineVersion = "";
+  [read : ToSubclass] boolean NISEnabled = FALSE;
+};
+
+[Indication : ToSubclass DisableOverride,dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpEvent
+{
+  [ValueMap{"1", "2", "4", "8"} : ToSubclass,read : ToSubclass,key] uint32 CategoryDiscriminant;
+  [BitMap{"1", "2"} : ToSubclass,read : ToSubclass] uint32 ScanNotificationsValue;
+  [BitMap{"1", "2", "4", "8", "16"} : ToSubclass,read : ToSubclass] uint32 ThreatNotificationsValue;
+  [BitMap{"1"} : ToSubclass,read : ToSubclass] uint32 SignatureNotificationsValue;
+  [BitMap{"1", "2", "4", "8", "16", "32", "64"} : ToSubclass,read : ToSubclass] uint32 ComputerNotificationsValue;
+  [read : ToSubclass] datetime NotificationTime;
+  [read : ToSubclass] uint32 AdditionalData;
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpHeartBeat
+{
+  [implemented,static : ToSubclass DisableOverride] uint32 Send();
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpPreference
+{
+  [read : ToSubclass,key] string ComputerID = "";
+  boolean DisableAutoExclusions = FALSE;
+  string ExclusionPath[];
+  string ExclusionExtension[];
+  string ExclusionProcess[];
+  uint32 QuarantinePurgeItemsAfterDelay;
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 RealTimeScanDirection = 0;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 RemediationScheduleDay;
+  datetime RemediationScheduleTime;
+  uint32 ReportingAdditionalActionTimeOut;
+  uint32 ReportingCriticalFailureTimeOut;
+  uint32 ReportingNonCriticalTimeOut;
+  uint8 ScanAvgCPULoadFactor;
+  boolean CheckForSignaturesBeforeRunningScan;
+  uint32 ScanPurgeItemsAfterDelay;
+  boolean ScanOnlyIfIdleEnabled;
+  [ValueMap{"1", "2"} : ToSubclass] uint8 ScanParameters;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 ScanScheduleDay;
+  datetime ScanScheduleQuickScanTime;
+  datetime ScanScheduleTime;
+  uint32 SignatureFirstAuGracePeriod;
+  uint32 SignatureAuGracePeriod;
+  string SignatureDefinitionUpdateFileSharesSources;
+  boolean SignatureDisableUpdateOnStartupWithoutEngine;
+  string SignatureFallbackOrder;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 SignatureScheduleDay;
+  datetime SignatureScheduleTime;
+  uint32 SignatureUpdateCatchupInterval;
+  uint32 SignatureUpdateInterval;
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 MAPSReporting;
+  [ValueMap{"0", "1", "2", "3"} : ToSubclass] uint8 SubmitSamplesConsent;
+  boolean DisablePrivacyMode;
+  boolean RandomizeScheduleTaskTimes;
+  boolean DisableBehaviorMonitoring;
+  boolean DisableIntrusionPreventionSystem;
+  boolean DisableIOAVProtection;
+  boolean DisableRealtimeMonitoring;
+  boolean DisableScriptScanning;
+  boolean DisableArchiveScanning;
+  boolean DisableCatchupFullScan;
+  boolean DisableCatchupQuickScan;
+  boolean DisableEmailScanning;
+  boolean DisableRemovableDriveScanning;
+  boolean DisableRestorePoint;
+  boolean DisableScanningMappedNetworkDrivesForFullScan;
+  boolean DisableScanningNetworkFiles;
+  boolean UILockdown;
+  sint64 ThreatIDDefaultAction_Ids[];
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ThreatIDDefaultAction_Actions[];
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 UnknownThreatDefaultAction;
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 LowThreatDefaultAction;
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ModerateThreatDefaultAction;
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 HighThreatDefaultAction;
+  [ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 SevereThreatDefaultAction;
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 PUAProtection;
+  boolean DisableBlockAtFirstSeen;
+  [ValueMap{"0", "1", "2", "4", "6"} : ToSubclass] uint8 CloudBlockLevel;
+  uint32 CloudExtendedTimeout;
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 EnableNetworkProtection;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass] uint8 EnableControlledFolderAccess;
+  string AttackSurfaceReductionOnlyExclusions[];
+  string AttackSurfaceReductionRules_Ids[];
+  [ValueMap{"0", "1", "2"} : ToSubclass] uint8 AttackSurfaceReductionRules_Actions[];
+  string ControlledFolderAccessAllowedApplications[];
+  string ControlledFolderAccessProtectedFolders[];
+  string SharedSignaturesPath;
+  boolean EnableLowCpuPriority;
+  boolean EnableFileHashComputation;
+  [implemented,static : ToSubclass DisableOverride] uint32 Set([In] boolean DisableAutoExclusions,[In] string ExclusionPath[],[In] string ExclusionExtension[],[In] string ExclusionProcess[],[In] uint32 QuarantinePurgeItemsAfterDelay,[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 RealTimeScanDirection,[In,ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 RemediationScheduleDay,[In] datetime RemediationScheduleTime,[In] uint32 ReportingAdditionalActionTimeOut,[In] uint32 ReportingCriticalFailureTimeOut,[In] uint32 ReportingNonCriticalTimeOut,[In] uint8 ScanAvgCPULoadFactor,[In] boolean CheckForSignaturesBeforeRunningScan,[In] uint32 ScanPurgeItemsAfterDelay,[In] boolean ScanOnlyIfIdleEnabled,[In,ValueMap{"1", "2"} : ToSubclass] uint8 ScanParameters,[In,ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 ScanScheduleDay,[In] datetime ScanScheduleQuickScanTime,[In] datetime ScanScheduleTime,[In] uint32 SignatureFirstAuGracePeriod,[In] uint32 SignatureAuGracePeriod,[In] string SignatureDefinitionUpdateFileSharesSources,[In] boolean SignatureDisableUpdateOnStartupWithoutEngine,[In] string SignatureFallbackOrder,[In,ValueMap{"0", "1", "2", "3", "4", "5", "6", "7", "8"} : ToSubclass] uint8 SignatureScheduleDay,[In] datetime SignatureScheduleTime,[In] uint32 SignatureUpdateCatchupInterval,[In] uint32 SignatureUpdateInterval,[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 MAPSReporting,[In,ValueMap{"0", "1", "2", "3"} : ToSubclass] uint8 SubmitSamplesConsent,[in] boolean DisablePrivacyMode,[In] boolean RandomizeScheduleTaskTimes,[In] boolean DisableBehaviorMonitoring,[In] boolean DisableIntrusionPreventionSystem,[In] boolean DisableIOAVProtection,[In] boolean DisableRealtimeMonitoring,[In] boolean DisableScriptScanning,[In] boolean DisableArchiveScanning,[In] boolean DisableCatchupFullScan,[In] boolean DisableCatchupQuickScan,[In] boolean DisableEmailScanning,[In] boolean DisableRemovableDriveScanning,[In] boolean DisableRestorePoint,[In] boolean DisableScanningMappedNetworkDrivesForFullScan,[In] boolean DisableScanningNetworkFiles,[In] boolean UILockdown,[In] sint64 ThreatIDDefaultAction_Ids[],[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ThreatIDDefaultAction_Actions[],[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 UnknownThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 LowThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ModerateThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 HighThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 SevereThreatDefaultAction,[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 PUAProtection,[In] boolean DisableBlockAtFirstSeen,[In,ValueMap{"0", "1", "2", "4", "6"} : ToSubclass] uint8 CloudBlockLevel,[In] uint32 CloudExtendedTimeout,[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 EnableNetworkProtection,[In,ValueMap{"0", "1", "2", "3", "4"} : ToSubclass] uint8 EnableControlledFolderAccess,[In] string AttackSurfaceReductionOnlyExclusions[],[In] string AttackSurfaceReductionRules_Ids[],[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 AttackSurfaceReductionRules_Actions[],[In] string ControlledFolderAccessAllowedApplications[],[In] string ControlledFolderAccessProtectedFolders[],[in] string SharedSignaturesPath,[In] boolean EnableLowCpuPriority,[In] boolean EnableFileHashComputation,[In] boolean Force);
+  [implemented,static : ToSubclass DisableOverride] uint32 Remove([In] string ExclusionPath[],[In] string ExclusionExtension[],[In] string ExclusionProcess[],[In] sint64 ThreatIDDefaultAction_Ids[],[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean UnknownThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean LowThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean ModerateThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean HighThreatDefaultAction,[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] boolean SevereThreatDefaultAction,[In] string AttackSurfaceReductionOnlyExclusions[],[In] string AttackSurfaceReductionRules_Ids[],[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 AttackSurfaceReductionRules_Actions[],[In] string ControlledFolderAccessAllowedApplications[],[In] string ControlledFolderAccessProtectedFolders[],[in] string SharedSignaturesPath,[In] boolean Force);
+  [implemented,static : ToSubclass DisableOverride] uint32 Add([In] string ExclusionPath[],[In] string ExclusionExtension[],[In] string ExclusionProcess[],[In] sint64 ThreatIDDefaultAction_Ids[],[In,ValueMap{"1", "2", "3", "6", "8", "9", "10"} : ToSubclass] uint8 ThreatIDDefaultAction_Actions[],[In] string AttackSurfaceReductionOnlyExclusions[],[In] string AttackSurfaceReductionRules_Ids[],[In,ValueMap{"0", "1", "2"} : ToSubclass] uint8 AttackSurfaceReductionRules_Actions[],[In] string ControlledFolderAccessAllowedApplications[],[In] string ControlledFolderAccessProtectedFolders[],[in] string SharedSignaturesPath,[In] boolean Force);
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpScan
+{
+  [implemented,static : ToSubclass DisableOverride] uint32 Start([In] uint8 ScanType,[In] string ScanPath);
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpSignature
+{
+  [implemented,static : ToSubclass DisableOverride] uint32 Update([In] uint8 UpdateSource);
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpThreat : BaseStatus
+{
+  [read : ToSubclass] string SchemaVersion = "1.0.0.0";
+  [key,read : ToSubclass] sint64 ThreatID;
+  [read : ToSubclass] string ThreatName;
+  [ValueMap{"0", "1", "2", "3", "4", "5"} : ToSubclass,read : ToSubclass] uint8 SeverityID;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7,8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "36", "37", "38", "39", "40", "42", "43", "44", "45", "46", "47", "48"} : ToSubclass,read : ToSubclass] uint8 CategoryID;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 TypeID;
+  [BitMap{"0", "1", "2", "4", "8", "16", "32"} : ToSubclass,read : ToSubclass] uint32 RollupStatus;
+  [read : ToSubclass] string Resources[];
+  [read : ToSubclass] boolean DidThreatExecute = FALSE;
+  [read : ToSubclass] boolean IsActive = FALSE;
+  [implemented,static : ToSubclass DisableOverride] uint32 Remove();
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpThreatCatalog : BaseStatus
+{
+  [key,read : ToSubclass] sint64 ThreatID;
+  [read : ToSubclass] string ThreatName;
+  [ValueMap{"0", "1", "2", "3", "4", "5"} : ToSubclass,read : ToSubclass] uint8 SeverityID;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "7,8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "36", "37", "38", "39", "40", "42", "43", "44", "45", "46", "47", "48"} : ToSubclass,read : ToSubclass] uint8 CategoryID;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 TypeID;
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpThreatDetection : BaseStatus
+{
+  [key,read : ToSubclass] string DetectionID;
+  [key,read : ToSubclass] sint64 ThreatID;
+  [read : ToSubclass] string ProcessName;
+  [read : ToSubclass] string DomainUser;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "7", "8", "9"} : ToSubclass,read : ToSubclass] uint8 DetectionSourceTypeID;
+  [read : ToSubclass] string Resources[];
+  [read : ToSubclass] datetime InitialDetectionTime;
+  [read : ToSubclass] datetime LastThreatStatusChangeTime;
+  [read : ToSubclass] datetime RemediationTime;
+  [ValueMap{"0", "1", "2", "3", "4"} : ToSubclass,read : ToSubclass] uint8 CurrentThreatExecutionStatusID;
+  [ValueMap{"0", "1", "2", "3", "4", "5", "6", "Blocked", "102", "103", "104", "105", "107"} : ToSubclass,read : ToSubclass] uint8 ThreatStatusID;
+  [read : ToSubclass] sint32 ThreatStatusErrorCode;
+  [BitMap{"0", "1", "2", "3", "6", "8", "9", "10"} : ToSubclass,read : ToSubclass] uint8 CleaningActionID;
+  [read : ToSubclass] string AMProductVersion = "";
+  [read : ToSubclass] boolean ActionSuccess = FALSE;
+  [ValueMap{"0", "4", "8", "12", "16", "20", "24", "28", "32768", "32772", "32776", "32780", "32784", "32788", "32792", "32796"} : ToSubclass,read : ToSubclass] uint32 AdditionalActionsBitMask;
+};
+
+[dynamic : ToInstance,provider("ProtectionManagement") : ToInstance,locale(1033)] 
+class MSFT_MpWDOScan
+{
+  [implemented,static : ToSubclass DisableOverride] uint32 Start();
+};
